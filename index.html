@@ -5,60 +5,63 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Truth or Dare</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Creepster&display=swap');
-        @import url('https://fonts.googleapis.com/css2?family=Jolly+Lodger&display=swap');
-
         body {
-            background: url('https://source.unsplash.com/1600x900/?mystery,dark') no-repeat center center/cover;
+            margin: 0;
+            padding: 0;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             height: 100vh;
-            text-align: center;
+            background: linear-gradient(to bottom, #000, #222);
             color: white;
+            font-family: 'Creepster', cursive;
+            text-align: center;
             overflow: hidden;
         }
 
         h1 {
-            font-family: 'Creepster', cursive;
-            font-size: 4rem;
-            text-shadow: 3px 3px 10px red;
+            font-size: 3rem;
+            text-shadow: 0 0 10px red;
         }
 
         h2 {
+            font-size: 1.5rem;
             font-family: 'Creepster', cursive;
-            font-size: 2rem;
-            text-shadow: 2px 2px 8px white;
         }
 
-        .cards-container {
-            display: flex;
+        .card-container {
             position: relative;
-            width: 400px;
-            height: 250px;
+            display: flex;
             justify-content: center;
             align-items: center;
-            cursor: pointer;
+            gap: 10px;
+            margin-top: 20px;
         }
 
         .card {
             width: 120px;
             height: 180px;
             position: absolute;
-            transition: transform 0.5s ease-in-out;
+            transition: transform 0.6s ease, left 0.6s ease;
             transform-origin: center;
-            background-size: cover;
-            backface-visibility: hidden;
+            cursor: pointer;
+        }
+
+        .card img {
+            width: 100%;
+            height: 100%;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.2);
         }
 
         .floating {
-            animation: float 3s infinite alternate ease-in-out;
+            animation: float 2s infinite alternate ease-in-out;
         }
 
         @keyframes float {
-            0% { transform: translateY(0px); }
-            100% { transform: translateY(10px); }
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-10px); }
         }
 
         .flipped {
@@ -71,8 +74,11 @@
             left: 50%;
             transform: translate(-50%, -50%) rotateY(180deg);
             font-size: 1.5rem;
-            font-family: 'Jolly Lodger', cursive;
+            font-family: 'JokerMan', cursive;
             color: black;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 10px 15px;
+            border-radius: 5px;
             display: none;
         }
     </style>
@@ -81,64 +87,44 @@
     <h1>Truth or Dare</h1>
     <h2>Choose Wisely</h2>
     
-    <div class="cards-container" id="cardsContainer">
-        <div class="card floating" data-truth-dare>
-            <img src="jack-the-queen.jpg" width="120" height="180">
-            <div class="card-text"></div>
-        </div>
-        <div class="card floating" data-truth-dare>
-            <img src="jack-the-queen.jpg" width="120" height="180">
-            <div class="card-text"></div>
-        </div>
-        <div class="card floating" data-truth-dare>
-            <img src="Joker.jpg" width="120" height="180">
-            <div class="card-text"></div>
-        </div>
-        <div class="card floating" data-truth-dare>
-            <img src="Joker.jpg" width="120" height="180">
-            <div class="card-text"></div>
-        </div>
+    <div class="card-container">
+        <div class="card floating" data-index="0"><img src="jack-the-queen.jpg" alt="Card"></div>
+        <div class="card floating" data-index="1"><img src="jack-the-queen.jpg" alt="Card"></div>
+        <div class="card floating" data-index="2"><img src="Joker.jpg" alt="Card"></div>
+        <div class="card floating" data-index="3"><img src="Joker.jpg" alt="Card"></div>
     </div>
 
     <script>
         document.addEventListener("DOMContentLoaded", () => {
-            const cardsContainer = document.getElementById("cardsContainer");
-            const cards = document.querySelectorAll(".card");
-            const truthOrDare = shuffleArray(["Truth", "Truth", "Dare", "Dare"]);
+            let cards = document.querySelectorAll(".card");
+            let words = ["Truth", "Truth", "Dare", "Dare"];
+            words.sort(() => Math.random() - 0.5); // Shuffle the words on reload
+            
+            let spread = false;
 
-            // Initial randomization of truth/dare on each card
             cards.forEach((card, index) => {
-                card.querySelector(".card-text").textContent = truthOrDare[index];
-            });
-
-            let isSpread = false;
-
-            cardsContainer.addEventListener("click", () => {
-                if (!isSpread) {
-                    cards.forEach((card, index) => {
-                        card.style.transform = `translateX(${(index - 1.5) * 130}px) rotate(0deg)`;
-                    });
-                    isSpread = true;
-                }
-            });
-
-            cards.forEach(card => {
-                card.addEventListener("click", (e) => {
-                    e.stopPropagation();
-                    if (!card.classList.contains("flipped")) {
-                        card.classList.add("flipped");
-                        card.querySelector(".card-text").style.display = "block";
+                card.addEventListener("click", () => {
+                    if (!spread) {
+                        // Spread the cards
+                        cards.forEach((c, i) => {
+                            c.style.left = `${(i - 1.5) * 150}px`;
+                            c.style.position = "relative";
+                            c.classList.remove("floating");
+                        });
+                        spread = true;
+                    } else {
+                        // Flip the card
+                        if (!card.classList.contains("flipped")) {
+                            let textDiv = document.createElement("div");
+                            textDiv.classList.add("card-text");
+                            textDiv.textContent = words[index];
+                            card.appendChild(textDiv);
+                            card.classList.add("flipped");
+                            textDiv.style.display = "block";
+                        }
                     }
                 });
             });
-
-            function shuffleArray(array) {
-                for (let i = array.length - 1; i > 0; i--) {
-                    const j = Math.floor(Math.random() * (i + 1));
-                    [array[i], array[j]] = [array[j], array[i]];
-                }
-                return array;
-            }
         });
     </script>
 </body>
