@@ -59,11 +59,11 @@
             box-shadow: 0 4px 10px rgba(255, 255, 255, 0.2);
         }
 
-        /* Initially Overlapping with Slight Visibility */
-        .card:nth-child(1) { left: 0px; z-index: 4; }
-        .card:nth-child(2) { left: 20px; z-index: 3; }
-        .card:nth-child(3) { left: 40px; z-index: 2; }
-        .card:nth-child(4) { left: 60px; z-index: 1; }
+        /* Initially Overlapping with Slight Visibility, Centered */
+        .card:nth-child(1) { left: -30px; z-index: 4; }
+        .card:nth-child(2) { left: -10px; z-index: 3; }
+        .card:nth-child(3) { left: 10px; z-index: 2; }
+        .card:nth-child(4) { left: 30px; z-index: 1; }
 
         /* Floating Animation */
         .floating {
@@ -85,7 +85,7 @@
             position: absolute;
             top: 50%;
             left: 50%;
-            transform: translate(-50%, -50%) rotateY(180deg);
+            transform: translate(-50%, -50%);
             font-size: 1.5rem;
             font-family: 'Jolly Lodger', cursive;
             color: black;
@@ -125,7 +125,7 @@
             container.addEventListener("click", () => {
                 if (!spread) {
                     cards.forEach((card, index) => {
-                        const position = (index - 1.5) * 160;
+                        const position = (index - 1.5) * 170; // Spreading from center
                         setTimeout(() => {
                             card.style.left = `${position}px`;
                         }, index * 150);
