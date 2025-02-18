@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Truth or Dare</title>
     <style>
+        /* Main Styling */
         body {
             margin: 0;
             padding: 0;
@@ -20,112 +22,144 @@
             overflow: hidden;
         }
 
+        /* Title Styling */
         h1 {
-            font-size: 3rem;
+            font-size: 4rem;
+            margin: 0;
             text-shadow: 0 0 10px red;
         }
 
         h2 {
             font-size: 1.5rem;
+            margin-top: 10px;
             font-family: 'Creepster', cursive;
         }
 
+        /* Card Container */
         .card-container {
             position: relative;
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 10px;
-            margin-top: 20px;
+            margin-top: 30px;
         }
 
+        /* Card Styling */
         .card {
             width: 120px;
             height: 180px;
             position: absolute;
-            transition: transform 0.6s ease, left 0.6s ease;
-            transform-origin: center;
+            transition: transform 0.8s ease, left 0.8s ease;
             cursor: pointer;
-        }
-
-        .card img {
-            width: 100%;
-            height: 100%;
+            transform-origin: center;
+            background-size: cover;
+            backface-visibility: hidden;
             border-radius: 10px;
-            box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.2);
+            box-shadow: 0 4px 10px rgba(255, 255, 255, 0.2);
         }
 
+        /* Floating Animation */
         .floating {
             animation: float 2s infinite alternate ease-in-out;
         }
 
         @keyframes float {
-            0% { transform: translateY(0); }
-            100% { transform: translateY(-10px); }
+            0% {
+                transform: translateY(0);
+            }
+
+            100% {
+                transform: translateY(-10px);
+            }
         }
 
+        /* Flipped Card Style */
         .flipped {
             transform: rotateY(180deg);
         }
 
+        /* Truth/Dare Text on Flipped Cards */
         .card-text {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%) rotateY(180deg);
             font-size: 1.5rem;
-            font-family: 'JokerMan', cursive;
+            font-family: 'Jolly Lodger', cursive;
             color: black;
             background: rgba(255, 255, 255, 0.8);
             padding: 10px 15px;
             border-radius: 5px;
             display: none;
         }
+
     </style>
 </head>
+
 <body>
+
+    <!-- Title and Subtitle -->
     <h1>Truth or Dare</h1>
     <h2>Choose Wisely</h2>
-    
-    <div class="card-container">
-        <div class="card floating" data-index="0"><img src="jack-the-queen.jpg" alt="Card"></div>
-        <div class="card floating" data-index="1"><img src="jack-the-queen.jpg" alt="Card"></div>
-        <div class="card floating" data-index="2"><img src="Joker.jpg" alt="Card"></div>
-        <div class="card floating" data-index="3"><img src="Joker.jpg" alt="Card"></div>
+
+    <!-- Card Deck -->
+    <div class="card-container" id="cardContainer">
+        <div class="card floating" data-index="0" style="background-image: url('jack-the-queen.jpg'); left: 0;"></div>
+        <div class="card floating" data-index="1" style="background-image: url('jack-the-queen.jpg'); left: 20px;"></div>
+        <div class="card floating" data-index="2" style="background-image: url('Joker.jpg'); left: 40px;"></div>
+        <div class="card floating" data-index="3" style="background-image: url('Joker.jpg'); left: 60px;"></div>
     </div>
 
     <script>
         document.addEventListener("DOMContentLoaded", () => {
-            let cards = document.querySelectorAll(".card");
-            let words = ["Truth", "Truth", "Dare", "Dare"];
-            words.sort(() => Math.random() - 0.5); // Shuffle the words on reload
+            const cards = document.querySelectorAll(".card");
+            const container = document.getElementById("cardContainer");
             
+            // Shuffle Truth/Dare odds every reload
+            const words = shuffleArray(["Truth", "Truth", "Dare", "Dare"]);
+
             let spread = false;
 
+            // Spread Cards Animation and Flip Logic
+            container.addEventListener("click", () => {
+                if (!spread) {
+                    // Spread cards with a coming-from-behind effect
+                    cards.forEach((card, index) => {
+                        const position = (index - 1.5) * 160;
+                        setTimeout(() => {
+                            card.style.left = `${position}px`;
+                        }, index * 150);
+                    });
+                    spread = true;
+                }
+            });
+
+            // Flip the card to reveal Truth/Dare
             cards.forEach((card, index) => {
-                card.addEventListener("click", () => {
-                    if (!spread) {
-                        // Spread the cards
-                        cards.forEach((c, i) => {
-                            c.style.left = `${(i - 1.5) * 150}px`;
-                            c.style.position = "relative";
-                            c.classList.remove("floating");
-                        });
-                        spread = true;
-                    } else {
-                        // Flip the card
-                        if (!card.classList.contains("flipped")) {
-                            let textDiv = document.createElement("div");
-                            textDiv.classList.add("card-text");
-                            textDiv.textContent = words[index];
-                            card.appendChild(textDiv);
-                            card.classList.add("flipped");
-                            textDiv.style.display = "block";
-                        }
+                card.addEventListener("click", (e) => {
+                    e.stopPropagation(); // Prevent spreading from being triggered again
+                    if (!card.classList.contains("flipped")) {
+                        card.classList.add("flipped");
+                        const textDiv = document.createElement("div");
+                        textDiv.classList.add("card-text");
+                        textDiv.textContent = words[index];
+                        card.appendChild(textDiv);
+                        textDiv.style.display = "block";
                     }
                 });
             });
+
+            // Utility function to shuffle an array
+            function shuffleArray(array) {
+                for (let i = array.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [array[i], array[j]] = [array[j], array[i]];
+                }
+                return array;
+            }
         });
     </script>
+
 </body>
+
 </html>
