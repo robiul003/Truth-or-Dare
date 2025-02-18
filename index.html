@@ -4,27 +4,142 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Truth or Dare</title>
-    <link rel="stylesheet" href="styles.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Creepster&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Jolly+Lodger&display=swap');
+
+        body {
+            background: url('https://source.unsplash.com/1600x900/?mystery,dark') no-repeat center center/cover;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            text-align: center;
+            color: white;
+            overflow: hidden;
+        }
+
+        h1 {
+            font-family: 'Creepster', cursive;
+            font-size: 4rem;
+            text-shadow: 3px 3px 10px red;
+        }
+
+        h2 {
+            font-family: 'Creepster', cursive;
+            font-size: 2rem;
+            text-shadow: 2px 2px 8px white;
+        }
+
+        .cards-container {
+            display: flex;
+            position: relative;
+            width: 400px;
+            height: 250px;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .card {
+            width: 120px;
+            height: 180px;
+            position: absolute;
+            transition: transform 0.5s ease-in-out;
+            transform-origin: center;
+            background-size: cover;
+            backface-visibility: hidden;
+        }
+
+        .floating {
+            animation: float 3s infinite alternate ease-in-out;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            100% { transform: translateY(10px); }
+        }
+
+        .flipped {
+            transform: rotateY(180deg);
+        }
+
+        .card-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotateY(180deg);
+            font-size: 1.5rem;
+            font-family: 'Jolly Lodger', cursive;
+            color: black;
+            display: none;
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <h1 class="spooky-title">Truth or Dare</h1>
-        <h2 class="subtitle">Choose Wisely</h2>
-
-        <!-- Card Deck (Initially Stacked) -->
-        <div class="card-deck" id="cardDeck">
-            <div class="card" onclick="spreadCards()">Click to Play</div>
+    <h1>Truth or Dare</h1>
+    <h2>Choose Wisely</h2>
+    
+    <div class="cards-container" id="cardsContainer">
+        <div class="card floating" data-truth-dare>
+            <img src="jack-the-queen.jpg" width="120" height="180">
+            <div class="card-text"></div>
         </div>
-
-        <!-- Truth or Dare Cards -->
-        <div class="cards hidden" id="cardsContainer">
-            <div class="card" onclick="flipCard(this, 'Truth', 'images/jack-the-queen.jpg')"></div>
-            <div class="card" onclick="flipCard(this, 'Truth', 'images/jack-the-queen.jpg')"></div>
-            <div class="card" onclick="flipCard(this, 'Dare', 'images/joker.jpg')"></div>
-            <div class="card" onclick="flipCard(this, 'Dare', 'images/joker.jpg')"></div>
+        <div class="card floating" data-truth-dare>
+            <img src="jack-the-queen.jpg" width="120" height="180">
+            <div class="card-text"></div>
+        </div>
+        <div class="card floating" data-truth-dare>
+            <img src="Joker.jpg" width="120" height="180">
+            <div class="card-text"></div>
+        </div>
+        <div class="card floating" data-truth-dare>
+            <img src="Joker.jpg" width="120" height="180">
+            <div class="card-text"></div>
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const cardsContainer = document.getElementById("cardsContainer");
+            const cards = document.querySelectorAll(".card");
+            const truthOrDare = shuffleArray(["Truth", "Truth", "Dare", "Dare"]);
+
+            // Initial randomization of truth/dare on each card
+            cards.forEach((card, index) => {
+                card.querySelector(".card-text").textContent = truthOrDare[index];
+            });
+
+            let isSpread = false;
+
+            cardsContainer.addEventListener("click", () => {
+                if (!isSpread) {
+                    cards.forEach((card, index) => {
+                        card.style.transform = `translateX(${(index - 1.5) * 130}px) rotate(0deg)`;
+                    });
+                    isSpread = true;
+                }
+            });
+
+            cards.forEach(card => {
+                card.addEventListener("click", (e) => {
+                    e.stopPropagation();
+                    if (!card.classList.contains("flipped")) {
+                        card.classList.add("flipped");
+                        card.querySelector(".card-text").style.display = "block";
+                    }
+                });
+            });
+
+            function shuffleArray(array) {
+                for (let i = array.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [array[i], array[j]] = [array[j], array[i]];
+                }
+                return array;
+            }
+        });
+    </script>
 </body>
 </html>
