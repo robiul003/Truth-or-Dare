@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Truth or Dare</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1 class="spooky-title">Truth or Dare</h1>
+        <h2 class="subtitle">Choose Wisely</h2>
+
+        <!-- Card Deck (Initially Stacked) -->
+        <div class="card-deck" id="cardDeck">
+            <div class="card" onclick="spreadCards()">Click to Play</div>
+        </div>
+
+        <!-- Truth or Dare Cards -->
+        <div class="cards hidden" id="cardsContainer">
+            <div class="card" onclick="flipCard(this, 'Truth', 'images/jack-the-queen.jpg')"></div>
+            <div class="card" onclick="flipCard(this, 'Truth', 'images/jack-the-queen.jpg')"></div>
+            <div class="card" onclick="flipCard(this, 'Dare', 'images/joker.jpg')"></div>
+            <div class="card" onclick="flipCard(this, 'Dare', 'images/joker.jpg')"></div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
