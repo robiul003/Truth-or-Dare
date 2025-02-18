@@ -1,12 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Truth or Dare</title>
     <style>
-        /* Main Styling */
+        /* Background & Main Styling */
         body {
             margin: 0;
             padding: 0;
@@ -22,7 +21,7 @@
             overflow: hidden;
         }
 
-        /* Title Styling */
+        /* Title & Subtitle */
         h1 {
             font-size: 4rem;
             margin: 0;
@@ -42,6 +41,8 @@
             justify-content: center;
             align-items: center;
             margin-top: 30px;
+            width: 100%;
+            height: 250px;
         }
 
         /* Card Styling */
@@ -58,19 +59,20 @@
             box-shadow: 0 4px 10px rgba(255, 255, 255, 0.2);
         }
 
+        /* Initially Overlapping with Slight Visibility */
+        .card:nth-child(1) { left: 0px; z-index: 4; }
+        .card:nth-child(2) { left: 20px; z-index: 3; }
+        .card:nth-child(3) { left: 40px; z-index: 2; }
+        .card:nth-child(4) { left: 60px; z-index: 1; }
+
         /* Floating Animation */
         .floating {
             animation: float 2s infinite alternate ease-in-out;
         }
 
         @keyframes float {
-            0% {
-                transform: translateY(0);
-            }
-
-            100% {
-                transform: translateY(-10px);
-            }
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-10px); }
         }
 
         /* Flipped Card Style */
@@ -92,7 +94,6 @@
             border-radius: 5px;
             display: none;
         }
-
     </style>
 </head>
 
@@ -104,26 +105,25 @@
 
     <!-- Card Deck -->
     <div class="card-container" id="cardContainer">
-        <div class="card floating" data-index="0" style="background-image: url('jack-the-queen.jpg'); left: 0;"></div>
-        <div class="card floating" data-index="1" style="background-image: url('jack-the-queen.jpg'); left: 20px;"></div>
-        <div class="card floating" data-index="2" style="background-image: url('Joker.jpg'); left: 40px;"></div>
-        <div class="card floating" data-index="3" style="background-image: url('Joker.jpg'); left: 60px;"></div>
+        <div class="card floating" data-index="0" style="background-image: url('jack-the-queen.jpg');"></div>
+        <div class="card floating" data-index="1" style="background-image: url('jack-the-queen.jpg');"></div>
+        <div class="card floating" data-index="2" style="background-image: url('Joker.jpg');"></div>
+        <div class="card floating" data-index="3" style="background-image: url('Joker.jpg');"></div>
     </div>
 
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             const cards = document.querySelectorAll(".card");
             const container = document.getElementById("cardContainer");
-            
+
             // Shuffle Truth/Dare odds every reload
             const words = shuffleArray(["Truth", "Truth", "Dare", "Dare"]);
 
             let spread = false;
 
-            // Spread Cards Animation and Flip Logic
+            // Spread Cards Animation
             container.addEventListener("click", () => {
                 if (!spread) {
-                    // Spread cards with a coming-from-behind effect
                     cards.forEach((card, index) => {
                         const position = (index - 1.5) * 160;
                         setTimeout(() => {
@@ -161,5 +161,4 @@
     </script>
 
 </body>
-
 </html>
