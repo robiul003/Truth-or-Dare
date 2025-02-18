@@ -21,7 +21,7 @@
             color: #ff0000;
             font-family: 'Creepster', cursive;
             font-size: 4rem;
-            text-shadow: 0 0 10px #ff0000;
+            text-shadow: 0 0 5px #ff0000;
             margin: 2rem 0 0;
             animation: titleGlow 2s infinite;
         }
@@ -66,10 +66,12 @@
             align-items: center;
             justify-content: center;
             border-radius: 10px;
+            background-size: cover;
+            background-position: center;
         }
 
         .card-front {
-            background: #2d0d0d;
+            background-image: url('Joker.jpg');
             transform: rotateY(0deg);
         }
 
@@ -80,16 +82,9 @@
             font-size: 1.5rem;
             text-align: center;
             padding: 1rem;
-        }
-
-        .card-label {
-            color: #ff0000;
-            font-family: 'Creepster', cursive;
-            position: absolute;
-            bottom: -30px;
-            width: 100%;
-            text-align: center;
-            text-shadow: 0 0 5px #ff0000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         @keyframes float {
@@ -98,8 +93,8 @@
         }
 
         @keyframes titleGlow {
-            0%, 100% { text-shadow: 0 0 10px #ff0000; }
-            50% { text-shadow: 0 0 20px #ff0000, 0 0 30px #ff0000; }
+            0%, 100% { text-shadow: 0 0 5px #ff0000; }
+            50% { text-shadow: 0 0 10px #ff0000; }
         }
 
         .spread {
@@ -147,21 +142,17 @@
             cards.forEach((card, index) => {
                 const cardElement = document.createElement('div');
                 cardElement.className = 'card';
-                cardElement.style.left = '225px';
-                cardElement.style.top = '100px';
+                cardElement.style.left = `${200 + (index % 2) * 20}px`;
+                cardElement.style.top = `${100 + Math.floor(index / 2) * 20}px`;
 
                 const front = document.createElement('div');
                 front.className = 'card-front';
                 
-                const label = document.createElement('div');
-                label.className = 'card-label';
-                label.textContent = card.type.toUpperCase();
-                
                 const back = document.createElement('div');
                 back.className = 'card-back';
-                back.textContent = card.text;
+                back.textContent = card.type.toUpperCase();
 
-                cardElement.append(front, back, label);
+                cardElement.append(front, back);
                 cardElement.addEventListener('click', () => handleCardClick(cardElement, index));
                 cardsContainer.appendChild(cardElement);
             });
